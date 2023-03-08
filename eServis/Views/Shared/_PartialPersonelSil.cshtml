@@ -1,0 +1,39 @@
+﻿@model eServis.Entities.Personel
+
+@{
+    ViewBag.Title = "Sil";
+}
+
+<h2>Sil</h2>
+
+
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AdSoyad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdSoyad) 
+        </dd>
+
+
+
+    </dl>
+
+
+    @using (Html.BeginForm("Sil", "Personel"))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input id="btnSil" type="submit" value="Sil" class="btn btn-danger" />
+
+        </div>
+    }
+</div>
+
+
+
+

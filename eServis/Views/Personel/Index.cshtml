@@ -1,0 +1,151 @@
+﻿
+
+@model List<eServis.Entities.Personel>
+@{
+    ViewBag.Title = "Personel Sayfasi";
+}
+
+
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+<script src="~/Content/sweetalert2.min.js"></script>
+<div class="container mt-1">
+    <div class="row">
+        <div class="col-12">
+            <a data-toggle="modal" data-target="#ModalPersonel" class="btn btn-success"> Yeni Kayıt</a>
+            <a data-toggle="modal" data-target="#ModalArsivListesi" class="btn btn-success"> Arşiv Listesi</a>
+        </div>
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-5 col-sm-5 mt-2 mb-2">
+
+                <div class="card text-white bg-dark " style=" ">
+
+                    <div class="card-header" style="background-color:#000000!important">
+                        <button data-toggle="modal" data-sil-id="@item.ID" data-target="#ModalSil" class="btn btn-sm  btn-danger">
+                            <img src="~/Content/svg/trash.svg" />
+                        </button>
+                        <button data-toggle="modal" data-duzenle-id="@item.ID" data-target="#ModalDuzenle" class="btn btn-sm  btn-light ">
+                            <img src="~/Content/svg/pencil.svg" />
+
+                        </button>
+                        <button data-toggle="modal" data-duzenle-id="@item.ID" data-target="#ModalAciklama" style="background-color:#df0ff1" class="btn btn-sm  ">
+
+                            <img src="~/Content/svg/chat-right-text.svg" />
+                        </button>
+                        <button data-toggle="modal" data-duzenle-id="@item.ID" data-target="#ModalArsiv" class="btn btn-sm btn btn-primary">
+                            <img src="~/Content/svg/arsiv.svg" />
+                        </button>
+                    </div>
+
+                    <div class="detay text-white">
+                        <a class="text-white">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item  bg-dark">@item.Ad  @item.Soyad</li>
+
+                            </ul>
+                        </a>
+                    </div>
+
+                    <div class="card-footer bg-dark">
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        }
+    </div>
+</div>
+
+@Bootstrap.ModalPopup(id: "ModalPersonel", title: "Personel Ekle", showCloseButton: true)
+
+@Bootstrap.ModalPopup(id: "ModalDuzenle", title: "Personel Düzenle", showCloseButton: true)
+
+@Bootstrap.ModalPopup(id: "ModalSil", title: "Personel Bilgisi Silinsin mi?", showCloseButton: true)
+@Bootstrap.ModalPopup(id: "ModalAciklama", title: "Personel Açıklama Listesi", showCloseButton: true)
+@Bootstrap.ModalPopup(id: "ModalArsiv", title: "Personel Arşiv Listesi", showCloseButton: true)
+@Bootstrap.ModalPopup(id: "ModalArsivListesi", title: "Personel Arşiv Listesi", showCloseButton: true)
+
+<script>
+
+    $("#ModalPersonel").on("show.bs.modal", function (e) {
+
+
+        $("#ModalPersonel_body").load("/Personel/Ekle/");
+
+
+    })
+    $("#ModalArsiv").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("duzenle-id");
+        $("#ModalArsiv_body").load("/Personel/Arsiv/" + id);
+
+
+    })
+
+    $("#ModalArsivListesi").on("show.bs.modal", function (e) {
+   
+        $("#ModalArsivListesi_body").load("/Personel/ArsivListesi/");
+
+    })
+    $("#ModalSil").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $("#ModalSil_body").load("/Personel/Sil/" + id);
+
+
+    })
+    $("#ModalDuzenle").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("duzenle-id");
+        $("#ModalDuzenle_body").load("/Personel/Duzenle/" + id);
+
+
+
+    });
+    $("#ModalAciklama").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("duzenle-id");
+        $("#ModalAciklama_body").load("/Personel/AciklamaEkle/" + id);
+
+
+    });
+    //$('#btnDelete').click(function () {
+    //    var btn = $(e.relatedTarget);
+    //    var id = $(btn).data("sil-id");
+    //    $.ajax({
+
+    //        type: "POST",
+    //        url: "/Fis/Sil/" + id,
+    //        data: { 'Id': id },
+    //        success: function () {
+    //            //  window.location.reload();
+
+    //        }
+
+    //    });
+    //})
+    //$('#btnUpdate').click(function () {
+    //    var btn = $(e.relatedTarget);
+    //    var id = $(btn).data("duzenle-id");
+    //    var ListeFormData = $("#ListeForm").serialize();
+    //    $.ajax({
+
+    //        type: "POST",
+    //        url: "/Fis/Duzenle/" + id,
+    //        data: ListeFormData,
+    //        success: function () {
+    //            //  window.location.reload();
+
+    //        }
+
+    //    });
+    //})
+
+</script>

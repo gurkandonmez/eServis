@@ -1,0 +1,69 @@
+﻿
+@model eServis.Entities.AracBakim
+
+<script src="~/Content/sweetalert2.min.js"></script>
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<script>
+    $(document).on("click", "#btnTip", function () {
+        var formValues = $("#Tip").serialize();
+        $.ajax({
+            url: '/AracTanim/Tip/',
+            type: 'POST',
+            dataType: 'json',
+            data: formValues,
+            success: function (data) {
+
+      
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tebrikler!',
+                        text: 'Bilgi Başarıyla Eklendi!'
+
+
+                    })
+                },
+                error:function(data) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Uyarı!',
+                        text: 'Alan boş olamaz!'
+
+
+                    })
+                }
+
+            
+
+
+        })
+
+    });
+</script>
+@using (Html.BeginForm("Tip", "AracTanim", FormMethod.Post, new { @id = "Tip" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Adi, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Adi, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Adi, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button id="btnTip" type="button" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+}
+    

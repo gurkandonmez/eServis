@@ -1,0 +1,81 @@
+﻿@model eServis.Entities.AracBakim
+
+
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<script src="~/Content/sweetalert2.min.js"></script>
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+@using (Html.BeginForm("Tip", "Arac", FormMethod.Post, new { @id = "Tip" }))
+
+{
+    @Html.AntiForgeryToken()
+    <script>
+        $(document).on("click", "#btnSave", function () {
+            var formValues = $("#Tip").serialize();
+            $.ajax({
+                url: '/Arac/Tip/',
+                type: 'POST',
+                dataType: 'json',
+                data: formValues,
+                success: function (data)
+                {
+
+                    if (data!= null) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Tebrikler!',
+                            text: 'Bilgi Başarıyla Eklendi!'
+
+
+                        })
+                    }
+                    if (data == "0") {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Uyarı!',
+                            text: 'Alan boş olamaz!'
+
+
+                        })
+                    }
+
+                }
+
+
+            })
+
+        });
+    </script>
+    <div class="card m-1 ">
+        <div class="card-header bg-dark">
+            <div class="card-title ">
+                <h5 class="text-white">Seçenek Ekle</h5>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Adi, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Adi, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Adi, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button id="btnSave" type="button" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

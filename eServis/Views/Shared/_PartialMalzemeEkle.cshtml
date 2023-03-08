@@ -1,0 +1,86 @@
+﻿@model eServis.Entities.Malzeme
+@{
+    ViewBag.Title = "Ekle";
+}
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+<script src="~/Content/sweetalert2.min.js"></script>
+<script>
+    $("#btnKaydet").on("click", function () {
+
+        var formValues = $("#ListeForm").serialize();
+        $.ajax({
+            url: "/Malzeme/Ekle/",
+            type: 'POST',
+            dataType: 'json',
+            data: formValues,
+            success: function (data) {
+                if (data.Result.MalzemeAdi != null && data.Result.AdSoyad!=null) {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tebrikler!',
+                        text: 'Malzeme Başarıyla Eklendi!'
+
+
+                    })
+                    window.location = "/Malzeme/Index/", 7000;
+                }
+                else if (data.Result.AdSoyad == null || data.Result.MalzemeAdi) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Malzeme',
+                        text: 'Malzeme Adı boş olamaz!'
+
+
+                    })
+                }
+            }
+        });
+    });
+</script>
+@using (Html.BeginForm("Ekle", "Malzeme", FormMethod.Post, new { @id = "ListeForm" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+   
+    <div class="form-group">
+
+        <div class="col-md-10">
+            @Html.DropDownList("AdSoyad", null, htmlAttributes: new { @id = "AdSoyad", @name="AdSoyad", @class = "form-control" })
+
+        </div>
+    </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MalzemeAdi, new { htmlAttributes = new { @class = "form-control", @placeholder = "Malzeme Adı" } })
+            @Html.ValidationMessageFor(model => model.MalzemeAdi, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Kod, new { htmlAttributes = new { @class = "form-control", @placeholder = "Malzeme Kodu" } })
+            @Html.ValidationMessageFor(model => model.Kod, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Adet, new { htmlAttributes = new { @class = "form-control", @placeholder = "Malzeme Adeti" } })
+            @Html.ValidationMessageFor(model => model.Adet, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" id="btnKaydet" value="Kaydet" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+
+}

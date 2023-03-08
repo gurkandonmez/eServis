@@ -1,0 +1,238 @@
+﻿@using eServis.BusinessLayer;
+@using eServis.Entities;
+@model eServis.Entities.AracTanimlama
+
+
+
+<div class="container mt-1">
+
+
+
+
+
+    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/umd/popper.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert2.css" rel="stylesheet" />
+    <script src="~/Content/sweetalert2.min.js"></script>
+
+
+    <div class="row-cols-1">
+
+        <div class="col-lg-12 col-sm-4 col-md-12" style="height:auto !important">
+            <div class="card  ">
+                <div class="card-header bg-primary">
+                    <h5 class="text-white font-weight-bold">
+
+
+                        <span class="float-left"> Bayi Listesi </span>
+                        <small class="float-right">@System.DateTime.Now.ToShortDateString()</small>
+
+
+                    </h5>
+                </div>
+
+                <div class="card-body bg-light">
+                    <div class="table-responsive">
+                        <table class="table table-striped ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Sıra</th>
+
+                                    <th>Adı</th>
+                                    <th>Sil</th>
+                                    <th>Güncelle</th>
+                                    <th>Arşiv</th>
+                                </tr>
+                            </thead>
+                            @using (Html.BeginForm("Sirala", "Bayi"))
+                            {
+                                <tbody class="table-hover">
+
+
+                                    <tr class="bg-transparent">
+
+
+
+                                        <td class="float-left">
+
+
+                                            <button type="submit" class="btn btn-sm  btn-primary">
+                                                <img src="~/Content/svg/sort-numeric-down.svg" width="25" height="25" />
+                                            </button>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a href="/Bayi/ListA/" type="submit" class="btn  btn-sm btn-danger">
+                                                <img src="~/Content/svg/sort-alpha-down.svg" width="25" height="25" />
+                                            </a>
+
+
+                                        </td>
+
+
+                                        <td>
+                                            <a id="btnBayi" data-id="@ViewBag.Id" data-toggle="modal" data-target="#BayiEkle" class="btn btn-primary btn-sm">YENI KAYIT</a>
+
+                                        </td>
+                                        <td>
+                                            <a id="btnBayi" data-id="@ViewBag.Id" data-toggle="modal" data-target="#ArsivListesi" class="btn btn-primary btn-sm">ARŞİV LİSTESİ</a>
+
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                    @foreach (var item in ViewBag.Bayi)
+                                    {
+
+                                        <tr id="update">
+
+                                            <td width="50px">
+
+                                                <input type="text" name="Sira" value="@item.Sira" id="@item.Id" class="form-control font-weight-bold sira" />
+                                                <input type="hidden" name="Id" value="@item.Id" class="form-control sira" />
+
+
+
+
+                                            <td>
+                                                <a style="height:30px" href="" data-toggle="modal" data-target="#ModalDuzenle" class="btn btn-dark btn-block btn-sm   font-weight-bold text-white">
+                                                    @item.Adi
+                                                </a>
+                                            </td>
+
+                                            <td>
+                                                <a data-toggle="modal" data-target="#BayiSil" data-sil-id="@item.Id" class="sil btn btn-danger btn-sm full text-center font-weigt-bold" style="height:30px">Sil</a>
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#BayiGuncelle" data-sil-id="@item.Id" class="guncelle btn btn-success btn-sm full text-center font-weigt-bold" style="height:30px">Güncelle</a>
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#BayiArsiv" data-sil-id="@item.Id" class="guncelle btn btn-primary btn-sm full text-center font-weigt-bold" style="height:30px">Arşive Gönder</a>
+                                                 </td>
+
+
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-primary text-white">
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+@Bootstrap.ModalPopup(id: "BayiEkle", title: "Bayi Ekle")
+@Bootstrap.ModalPopup(id: "BayiSil", title: "Bayi Silinsin mi?")
+@Bootstrap.ModalPopup(id: "BayiGuncelle", title: "Araç Bilgisi Düzenle")
+@Bootstrap.ModalPopup(id: "BayiArsiv", title: "Bayi Arşive Gönderilsin mi?")
+@Bootstrap.ModalPopup(id: "ArsivListesi", title: "Arşiv Listesi")
+<script>
+
+    $("#BayiEkle").on("show.bs.modal", function (e) {
+
+
+        $("#BayiEkle_body").load("/Bayi/Ekle/");
+
+
+    });  
+    $("#ArsivListesi").on("show.bs.modal", function (e) {
+
+
+        $("#ArsivListesi_body").load("/Bayi/ArsivListesi/");
+
+
+    });
+    $("#BayiSil").on("show.bs.modal", function (e) {
+
+        var btn = $(e.relatedTarget);
+        var id = btn.data("sil-id")
+        $("#BayiSil_body").load("/Bayi/Sil/" + id);
+
+
+    });
+    $("#BayiGuncelle").on("show.bs.modal", function (e) {
+
+        var btn = $(e.relatedTarget);
+        var id = btn.data("sil-id")
+        $("#BayiGuncelle_body").load("/Bayi/Guncelle/" + id);
+
+
+    });
+    $("#BayiArsiv").on("show.bs.modal", function (e) {
+
+        var btn = $(e.relatedTarget);
+        var id = btn.data("sil-id")
+        $("#BayiArsiv_body").load("/Bayi/Arsiv/" + id);
+
+
+    });
+    $("#btnSave").on("click", function () {
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: "POST",
+            dataType: 'json',
+            data: ListeFormData,
+            url: "/Bayi/BayiKaydet/",
+
+            success: function (response) {
+
+            }
+
+
+
+        })
+    });
+
+    $("#btnDelete").on("click", function () {
+        var btn = $(e.relatedTarget);
+        var id = btn.data("sil-id")
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: "POST",
+            dataType: 'json',
+            data: ListeFormData,
+            url: "/Bayi/Sil/" + id,
+
+            success: function (response) {
+
+            }
+
+
+
+        })
+    });
+    $("#btnUpdate").on("click", function () {
+        var btn = $(e.relatedTarget);
+        var id = btn.data("sil-id")
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: "POST",
+            dataType: 'json',
+            data: ListeFormData,
+            url: "/Bayi/Guncelle/" + id,
+
+            success: function (response) {
+
+            }
+
+
+
+        })
+    });
+</script>

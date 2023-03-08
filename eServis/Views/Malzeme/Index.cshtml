@@ -1,0 +1,159 @@
+﻿@model List<eServis.Entities.Malzeme>
+@{
+    ViewBag.Title = "Index";
+
+}
+
+
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+<script src="~/Content/sweetalert2.min.js"></script>
+
+<div class="card  mt-1">
+    <div class="card-header bg-primary text-white">
+        <div class="card-title">
+            <b>MALZEME YÖNETİMİ</b>
+        </div>
+    </div>
+    <div class="card-body bg-light">
+        <div class="table-responsive">
+            <table class="table table-striped ">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sıra</th>
+
+                        <th>Adı</th>
+                        <th>Kodu</th>
+                        <th>Adet</th>
+
+                        <th>Sil</th>
+                        <th>Güncelle</th>
+                        <th>Detay</th>
+
+                    </tr>
+                </thead>
+                @using (Html.BeginForm("Sirala", "Malzeme"))
+                {
+                    <tbody class="table-hover">
+
+
+                        <tr class="bg-transparent">
+
+
+
+                            <td class="float-left">
+
+
+                                <button type="submit" class="btn btn-sm  btn-primary">
+                                    <img src="~/Content/svg/sort-numeric-down.svg" width="25" height="25" />
+                                </button>
+
+                            </td>
+
+                            <td>
+
+                                <a href="/Urun/ListA/" type="submit" class="btn  btn-sm btn-danger">
+                                    <img src="~/Content/svg/sort-alpha-down.svg" width="25" height="25" />
+                                </a>
+
+
+                            </td>
+
+
+                            <td>
+                                <a data-id="@ViewBag.Id" data-toggle="modal" data-target="#MalzemeEkle" class="btn btn-primary btn-sm">YENI KAYIT</a>
+
+                            </td>
+
+                            <td></td>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+
+                        <tr id="update">
+
+                            <td width="50px">
+
+                                <input type="text" name="Sira" value="@item.Sira" id="@item.ID" class="form-control font-weight-bold sira" />
+                                <input type="hidden" name="Id" value="@item.ID" class="form-control sira" />
+
+
+
+
+                            <td>
+                                <a style="height:30px" href="" data-toggle="modal" class="btn btn-dark btn-block btn-sm   font-weight-bold text-white">
+                                    @item.MalzemeAdi
+                                </a>
+                            </td>
+
+                            <td>
+                                <a style="height:30px" href="" data-toggle="modal" class="btn btn-dark btn-block btn-sm   font-weight-bold text-white">
+                                    @item.Kod
+                                </a>
+                            </td>
+                            <td>
+                                <a style="height:30px" href="" data-toggle="modal" class="btn btn-dark btn-block btn-sm   font-weight-bold text-white">
+                                    @item.Adet
+                                </a>
+                            </td>
+
+
+                            @*<td> @Html.ActionLink("Düzenle", "Duzenle", new { id = item.ID }, new { @class = "btn btn-danger btn-sm btn-block" })</td>*@
+                            <td>
+                                <a data-toggle="modal" data-target="#MalzemeSil" data-sil-id="@item.ID" class="sil btn btn-danger btn-sm full text-center font-weigt-bold" style="height:30px">Sil</a>
+                            </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#MalzemeGuncelle" data-sil-id="@item.ID" class="guncelle btn btn-success btn-sm full text-center font-weigt-bold" style="height:30px">Güncelle</a>
+                            </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#MalzemeDetay" data-sil-id="@item.ID" class="guncelle btn btn-dark btn-sm full text-center font-weigt-bold" style="height:30px">Detay Göster</a>
+                            </td>
+
+                        </tr>
+
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="card-footer bg-dark"></div>
+</div>
+@Bootstrap.ModalPopup(id: "MalzemeEkle", title: "Malzeme  Ekle")
+@Bootstrap.ModalPopup(id: "MalzemeSil", title: "Malzeme Bilgisi Silinsin mi?")
+@Bootstrap.ModalPopup(id: "MalzemeGuncelle", title: "Malzeme Bilgisi Güncellensin mi?")
+
+<script>
+    $("#MalzemeEkle").on("show.bs.modal", function (e) {
+
+        var btn = $(e.relatedTarget);
+        // var id = $(btn).data("data-id");
+        $("#MalzemeEkle_body").load("/Malzeme/Ekle/");
+
+
+    })
+    $("#MalzemeSil").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $("#MalzemeSil_body").load("/Malzeme/Sil/" + id);
+
+
+    })
+    $("#MalzemeGuncelle").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $("#MalzemeGuncelle_body").load("/Malzeme/Duzenle/" + id);
+
+
+    })
+    $("#MalzemeDetay").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $("#MalzemeGuncelle_body").load("/Malzeme/Detay/" + id);
+
+
+    })
+</script>

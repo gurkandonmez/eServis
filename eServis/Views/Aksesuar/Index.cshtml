@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+<script src="~/Content/sweetalert2.min.js"></script>
+<script src="~/Scripts/Aksesuar/Aksesuar.js"></script>
+<div class="container mt-1">
+
+    <div class="row-cols-1">
+
+        <div class="col-lg-12 col-sm-4 col-md-12" style="height:auto !important">
+            <div class="card  ">
+                <div class="card-header bg-primary">
+                    <h5 class="text-white font-weight-bold">
+
+
+
+                        <span class="float-left">Aksesuar Listesi</span>
+                        <small class="float-right">@System.DateTime.Now.ToShortDateString()</small>
+
+                    </h5>
+                </div>
+
+                <div class="card-body bg-light">
+                    <div class="table-responsive">
+                        <table id="Aksesuar" class="table table-striped ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Sıra</th>
+
+                                    <th>Kod</th>
+                                    <th>Ad</th>
+                                    <th>Fiyat</th>
+                                    <th>TKN Prim</th>
+                                    @*<th>Düzenle</th>*@
+                                    <th>Sil</th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            @using (Html.BeginForm("Sirala","Aksesuar"))
+                            {
+                                <tbody id="Aks" class="table-hover">
+
+
+                                    <tr class="bg-transparent">
+
+
+                                        <td class="float-left">
+                                            <button type="submit" id="Sirala" class="btn btn-sm  btn-primary">
+                                                <img src="~/Content/svg/sort-numeric-down.svg" width="25" height="25" />
+                                            </button>
+
+
+                                        </td>
+
+                                        <td>
+
+                                            <a href="/Aksesuar/ListA/" type="submit" class="btn  btn-sm btn-primary">
+                                                <img src="~/Content/svg/sort-alpha-down.svg" width="25" height="25" />
+                                            </a>
+
+
+                                        </td>
+
+
+                                        <td>
+                                            <a id="btnAksesuarEkle" class="btn btn-primary btn-sm" data-target="#ModalEkle">YENI KAYIT</a>
+
+                                        </td>
+
+                                        <td></td>
+                                    </tr>
+
+                                    @foreach (var item in ViewBag.Aksesuar)
+                                    {
+                                        
+                                        <tr id="@item.KodId" style="height:30px" class="mb-0 mt-0">
+
+                                            <td width="50px">
+                                                <input type="hidden" name="Id" value="@item.Id" class="form-control sira" />
+
+                                                <input type="text" name="Sira" value="@item.Sira" id="@item.Id" class="form-control font-weight-bold sira" />
+
+                                            </td>
+
+                                            <td class="kod"> <input  data-kod="@item.Kod" type="button" name="Kod"  class="btn btn-block btn-sm  btn-dark" value="@item.Kod" /> </td>
+                                            <td class="ad">
+                                                <a   style="height:30px" name="Ad"  data-item-ad="@item.Ad" data-item-fiyat="@item.Fiyat" data-item-tkn="@item.TknPrim" data-item-kod="@item.Kod"  data-kod-id="@item.KodId"  value="@item.Ad" class="guncelle btn btn-block btn-dark  text-white btn-sm font-weight-bold">@item.Ad</a>
+                                          
+                                            </td>
+                                            <td class="fiyat" style="width:100px"><a name="Fiyat" class="btn-dark btn-sm btn-block "> @item.Fiyat TL</a> </td>
+                                            <td class="tkn" style="width:100px"><a   name="Tkn" class="btn-dark btn-sm btn-block" > % @item.TknPrim</a></td>
+                                            @*<td> @Html.ActionLink("Düzenle", "Duzenle", new { id = item.Id }, new { @class = "btn btn-danger btn-sm btn-block" })</td>*@
+                                            <td class="sil">
+                                                <a id="BtnDelete"  data-delete-id="@item.Id" data-kod-id="@item.KodId" data-item-kod="@item.Kod" data-item-ad="@item.Ad" data-item-tkn="@item.TknPrim" data-item-fiyat="@item.Fiyat" class="btn btn-danger btn-sm full text-center font-weigt-bold" style="height:30px">SİL</a>
+                                            </td>
+
+
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-primary text-white">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

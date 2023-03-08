@@ -1,0 +1,71 @@
+﻿@model IEnumerable<eServis.Entities.AdresTanimlama>
+
+@{
+    ViewBag.Title = "Details";
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+<div class="container">
+
+    <div class="row mt-4">
+        <div class="col-10">
+            <div class="card ">
+                <div class="card-header bg-primary">
+                    @{
+                        if(TempData["Baslik"] !=null)
+                        {
+                    <h5>@TempData["Baslik"].ToString()</h5>
+
+                        }
+ 
+                    } 
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>
+
+                                    @Html.DisplayNameFor(model => model.Sira)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Baslik)
+                                </th>
+
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                          
+
+                            <td>
+                        
+                                @Html.ActionLink("Düzenle", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-dark" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sira)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Baslik)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Sil", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })
+
+                            </td>
+
+                        </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+ 
+
+</p>
+

@@ -1,0 +1,48 @@
+﻿@model eServis.Entities.Arac
+
+@{
+    ViewBag.Title = "Sil";
+}
+
+<h2>Sil</h2>
+
+
+<div>
+   
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Adi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Adi)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Plaka)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Plaka)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AracTakipNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AracTakipNo)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input id="btnSil" type="submit" value="Sil" class="btn btn-danger" /> 
+         
+        </div>
+    }
+</div>

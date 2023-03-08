@@ -1,0 +1,41 @@
+﻿
+@model eServis.Entities.AdresTanimlama
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+@using (Html.BeginForm("Delete", "AdresTanim", FormMethod.Post, new { id = "ListeForm" }))
+{
+ 
+    <div>
+
+        <dl class="dl-horizontal">
+            <dt>
+               
+                @Html.DisplayNameFor(model => model.Baslik)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Baslik)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Sira)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Sira)
+            </dd>
+
+        </dl>
+
+        @Html.AntiForgeryToken()
+
+        <button id="#btnDelete" data-delete-id="model.Id" class="btn btn-danger">Sil</button>
+
+
+
+    </div>
+}
+ 

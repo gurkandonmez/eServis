@@ -1,0 +1,37 @@
+﻿@model eServis.Entities.FisTanimlama
+
+@{
+    ViewBag.Title = "Sil";
+}
+
+<h2>Sil</h2>
+
+
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Baslik)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Baslik)
+        </dd>
+
+   
+
+    </dl>
+    
+
+    @using (Html.BeginForm("Sil", "FisTanim"))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input id="btnSil" type="submit" value="Sil" class="btn btn-danger" />
+
+        </div>
+    }
+</div>
+
+

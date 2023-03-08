@@ -1,0 +1,53 @@
+﻿@model eServis.Entities.Malzeme
+
+@{
+    ViewBag.Title = "Sil";
+}
+
+<h2>Sil</h2>
+
+
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MalzemeAdi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MalzemeAdi)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Kod)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Kod)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Adet)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Adet)
+        </dd>
+    </dl>
+
+
+    @using (Html.BeginForm("Sil", "Malzeme"))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input id="btnSil" type="submit" value="Sil" class="btn btn-danger" />
+
+        </div>
+    }
+</div>
+
+
+
+
+

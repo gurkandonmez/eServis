@@ -1,0 +1,203 @@
+﻿@using eServis.BusinessLayer;
+@using eServis.Entities;
+@model eServis.Entities.Urun
+
+
+
+<div class="container mt-1">
+
+
+
+
+
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert2.css" rel="stylesheet" />
+    <script src="~/Content/sweetalert2.min.js"></script>
+
+
+
+    <div class="row-cols-1">
+
+        <div class="col-lg-12 col-sm-4 col-md-12" style="height:auto !important">
+            <div class="card  ">
+                <div class="card-header bg-primary">
+                    <h5 class="text-white font-weight-bold">
+
+                        <span class="float-left"> Ürün Listesi </span>
+                        <small class="float-right">@System.DateTime.Now.ToShortDateString()</small>
+
+                    </h5>
+                </div>
+
+                <div class="card-body bg-light">
+                    <div class="table-responsive">
+                        <table class="table table-striped ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Sıra</th>
+
+                                    <th>Adı</th>
+                                    <th>Kodu</th>
+
+
+                                    <th>Sil</th>
+                                    <th>Güncelle</th>
+
+                                </tr>
+                            </thead>
+                            @using (Html.BeginForm("Sirala", "Urun"))
+                            {
+                                <tbody class="table-hover">
+
+
+                                    <tr class="bg-transparent">
+
+
+
+                                        <td class="float-left">
+
+
+                                            <button type="submit" class="btn btn-sm  btn-primary">
+                                                <img src="~/Content/svg/sort-numeric-down.svg" width="25" height="25" />
+                                            </button>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a href="/Urun/ListA/" type="submit" class="btn  btn-sm btn-danger">
+                                                <img src="~/Content/svg/sort-alpha-down.svg" width="25" height="25" />
+                                            </a>
+
+
+                                        </td>
+
+
+                                        <td>
+                                            <a id="btnUrunBilgi" data-id="@ViewBag.Id" data-toggle="modal" data-target="#UrunEkle" class="btn btn-primary btn-sm">YENI KAYIT</a>
+
+                                        </td>
+
+                                        <td></td>
+                                    </tr>
+
+                                    @foreach (var item in ViewBag.Urun)
+                                    {
+
+                                    <tr id="update">
+
+                                        <td width="50px">
+
+                                            <input type="text" name="Sira" value="@item.Sira" id="@item.ID" class="form-control font-weight-bold sira" />
+                                            <input type="hidden" name="Id" value="@item.ID" class="form-control sira" />
+
+
+
+
+                                        <td>
+                                            <a style="height:30px" href="" data-toggle="modal" class="btn btn-dark btn-block btn-sm   font-weight-bold text-white">
+                                                @item.Baslik
+                                            </a>
+                                        </td>
+
+                                        <td>
+                                            <a style="height:30px" href="" data-toggle="modal" class="btn btn-dark btn-block btn-sm   font-weight-bold text-white">
+                                                @item.Kod
+                                            </a>
+                                        </td>
+
+
+
+                                        @*<td> @Html.ActionLink("Düzenle", "Duzenle", new { id = item.ID }, new { @class = "btn btn-danger btn-sm btn-block" })</td>*@
+                                        <td>
+                                            <a data-toggle="modal" data-target="#UrunSil" data-sil-id="@item.ID" class="sil btn btn-danger btn-sm full text-center font-weigt-bold" style="height:30px">Sil</a>
+                                        </td>
+                                        <td>
+                                            <a data-toggle="modal" data-target="#UrunGuncelle" data-sil-id="@item.ID" class="guncelle btn btn-success btn-sm full text-center font-weigt-bold" style="height:30px">Güncelle</a>
+                                        </td>
+
+
+                                    </tr>
+
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-primary text-white">
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+</div>
+@Bootstrap.ModalPopup(id: "UrunEkle", title: "Urun  Ekle")
+@Bootstrap.ModalPopup(id: "UrunSil", title: "Urun Bilgisi Silinsin mi?")
+@Bootstrap.ModalPopup(id: "UrunGuncelle", title: "Urun Bilgisi Düzenle")
+
+
+<script>
+
+    $("#UrunEkle").on("show.bs.modal", function (e) {
+
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("data-id");
+        $("#UrunEkle_body").load("/Urun/Ekle/");
+
+
+    })
+    $("#UrunSil").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $("#UrunSil_body").load("/Urun/Sil/" + id);
+
+
+    })
+    $("#UrunGuncelle").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $("#UrunGuncelle_body").load("/Urun/Duzenle/" + id);
+
+
+    })
+    $('#btnSil').click(function () {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $.ajax({
+
+            type: "POST",
+            url: "/Urun/Sil/" + id,
+            data: { 'Id': id },
+            success: function () {
+                //  window.location.reload();
+
+            }
+
+        });
+    })
+    $('#btnUpdate').click(function () {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("duzenle-id");
+        var ListeFormData = $("#ListeForm").serialize();
+        $.ajax({
+
+            type: "POST",
+            url: "/Urun/Duzenle/" + id,
+            data: ListeFormData,
+            success: function () {
+                //  window.location.reload();
+
+            }
+
+        });
+    })
+
+</script>

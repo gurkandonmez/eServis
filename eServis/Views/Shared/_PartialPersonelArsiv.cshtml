@@ -1,0 +1,106 @@
+﻿@model eServis.Entities.Personel
+@using eServis.BusinessLayer;
+@using eServis.Entities;
+
+
+@{
+    ViewBag.Title = "Arsiv";
+
+    int Id = Convert.ToInt32(Session["ID"]);
+
+    PersonelYonetim personel = new PersonelYonetim();
+    IQueryable<Personel> list = personel.ListQueryable().Where(x => x.Durum == true);
+}
+
+
+
+
+<div>
+
+    @*<div class="table-responsive">
+            <table class="table table-light table-hover">
+                <thead>
+
+                    <tr>
+                        <th>Adı</th>
+                        <th>Soyadı</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> @Html.DisplayFor(model => model.Ad)</td>
+                        <td> @Html.DisplayFor(model => model.Soyad)</td>
+                        <td>
+                            <button id="btnArsiv" data-sil-id="@Id" type="button" style="background-color:#f12b0a !important; color:#ffffff" class="btn btn-sm ">Arşive Gönder</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Tarih</th>
+                        <th>Açıklama</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="arsiv" style="height:auto;">
+                    @using (Html.BeginForm("Arsiv", "Personel", FormMethod.Post, new { @id = "ListeForm" }))
+                    {
+
+                        foreach (var item in list)
+                        {
+                            <tr id="@item.KimlikNo">
+                                <td>@item.Ad</td>
+                                <td>@item.Soyad</td>
+                                <td>
+
+                                    <button id="btnArsivCikar" data-id="@item.ID" data-sil-id="@item.KimlikNo" type="button" style="background-color:#f12b0a !important; color:#ffffff" class="btn btn-sm ">Arşivden Çıkar</button>
+
+                                </td>
+                                <td>
+
+                                    <button id="btnSil" data-sil-id="@item.KimlikNo" type="button" style="background-color:#000 !important; color:#ffffff" class="btn btn-sm ">Sil</button>
+
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>*@
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Ad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ad)   @Html.DisplayFor(model => model.Soyad)
+        </dd>
+
+
+
+    </dl>
+
+    @using (Html.BeginForm("Sil", "Personel"))
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <button id="btnArsiv" data-sil-id="@Id" type="button" style="background-color:#f12b0a !important; color:#ffffff" class="btn btn-sm ">Arşive Gönder</button>
+
+
+    </div>
+    }
+</div>
+
+
+<script src="~/Scripts/Personel/personel.js"></script>
+
+

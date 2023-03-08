@@ -1,0 +1,223 @@
+﻿@using eServis.BusinessLayer
+@using eServis.Entities
+
+
+@model  eServis.Entities.Personel
+
+
+@{
+    int Id = Convert.ToInt32(Session["Id"]);
+
+
+    AciklamaYonetim ay = new AciklamaYonetim();
+    IQueryable<Aciklama> aciklama = ay.ListQueryable().Where(x => x.PersonelID == Id);
+
+}
+
+
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+<script src="~/Scripts/locales/bootstrap-datepicker.tr.min.js"></script>
+<link href="~/Content/bootstrap-datepicker.min.css" rel="stylesheet" />
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+<script src="~/Content/sweetalert2.min.js"></script>
+
+<script>
+    $(document).mouseup(function (e) {
+
+        $('#DogumTarihi').Close();
+        $('#IseBaslamaTarihi').Close();
+
+    });
+
+    $(document).ready(function () {
+        $("#DogumTarihi").datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'tr',
+        });
+
+        $("#IseBaslamaTarihi").datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'tr',
+        });
+
+</script>
+
+
+
+
+@using (Html.BeginForm("Ekle", "Personel", FormMethod.Post, new { @id = "ListeForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card mb-1">
+        <div class="card-body">
+            <div class="row g-3  mb-4">
+                <div class="col">
+                    @Html.EditorFor(model => model.AdSoyad, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ad" } })
+                </div>
+               
+            </div>
+
+            <div class="row g-3  mb-4">
+                <div class="col">
+                    @Html.EditorFor(model => model.KimlikNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "Kimlik No" } })
+                </div>
+                <div class="col">
+                    @Html.EditorFor(model => model.SigortaNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "Sigorta No" } })
+                </div>
+            </div>
+            <div class="row g-3  mb-4">
+                <div class="col">
+                    @Html.EditorFor(model => model.DogumTarihi, new { htmlAttributes = new { @id = "DogumTarihi", @class = "form-control", @placeholder = "Doğum Tarihi" } })
+
+                </div>
+                <div class="col">
+                    @Html.EditorFor(model => model.IseBaslamaTarihi, new { htmlAttributes = new { @id = "IseBaslamaTarihi", @class = "form-control", @placeholder = "İşe Başlama Tarihi" } })
+                </div>
+            </div>
+            <div class="row g-3  mb-4">
+                <div class="col">
+                    @Html.DropDownList("MedeniHali", new List<SelectListItem>
+
+               {
+                  new SelectListItem { Text = "Medeni Hal", Value = "0" },
+                  new SelectListItem { Text = "Bekar", Value = "Bekar" },
+                  new SelectListItem { Text = "Evli", Value = "Evli" }
+
+          },
+          new{ @class="form-control"})
+                </div>
+                <div class="col">
+                    @Html.EditorFor(model => model.CocukSayisi, new { htmlAttributes = new { @class = "form-control", @placeholder = "Çocuk Sayısı" } })
+                </div>
+            </div>
+            <div class="row g-3  mb-4">
+                <div class="col">
+                    @Html.EditorFor(model => model.Maas, new { htmlAttributes = new { @class = "form-control", @placeholder = "Maaş" } })
+
+                </div>
+                <div class="col">
+                    @Html.DropDownList("EgitimDurumu", new List<SelectListItem>
+
+                                {
+                                     new SelectListItem { Text = "Eğitim Durumu", Value = "0" },
+                                   new SelectListItem { Text = "Lise", Value = "Lise" },
+                                   new SelectListItem { Text = "Ön Lisans", Value = "Ön Lisans" },
+                                   new SelectListItem { Text = "Lisans", Value = "Lisans" }
+
+                             },
+                             new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group mb-4">
+                <div class="col-md-offset-2 col-md-10">
+                    <button id="btnPersonelKaydet" type="button" style="background-color:#242222 !important; color:#ffffff" class="btn btn-primary">Kaydet</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+
+
+}
+
+
+
+<script>
+    $("#btnPersonelKaydet").on("click", async function () {
+        var ListeFormData = $("#ListeForm").serialize();
+
+        $.ajax({
+
+            url: '/Personel/Duzenle/',
+            type: 'POST',
+            dataType: 'json',
+            data: ListeFormData,
+            success: function (data) {
+                if (data == 1) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tebriler!',
+                        text: 'Bilgiler bilgiler başarıyla güncellendi!'
+
+                    })
+                    window.location = "/Personel/Index/", 7000;
+                }
+                else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tebriler!',
+                        text: 'Bilgiler bilgiler başarıyla güncellendi!'
+
+                    });
+                    window.location = "/Personel/Index/", 7000;
+                }
+
+
+           
+              
+
+            }
+        })
+    });
+
+    //$("#btnKaydet").on("click", async function () {
+    //    var formValues = $("#ListeForm2").serialize();
+
+    //    $.ajax({
+    //        url: '/Personel/AciklamaEkle/',
+    //        type: 'POST',
+    //        dataType: 'json',
+    //        data: formValues,
+    //        success: function (data) {
+    //            if (data != "1") {
+    //                var tarih = new Date();
+    //                var yil = tarih.getFullYear();
+    //                var ay = tarih.getMonth();
+    //                var gun = tarih.getDay();
+    //                var Id = data.Result.PersonelID;
+    //                var Tarih = "<td>" + gun + '/' + ay + '/' + yil + "</td>"
+    //                var Note = "<td> " + data.Result.Note + "</td>";
+
+    //                var Sil = "<td style='border:2px doshed #ddd'> <button id='btnSil' data-sil-id='" + data.Result.PersonelID + "' type='button' data-target='#ModalSil' style='background-color:#f12b0a !important; color:#ffffff' class='btn btn-sm'>Sil</button></td>"
+    //                Swal.fire({
+    //                    icon: 'success',
+    //                    title: 'Açıklama Eklendi!',
+    //                    text: 'İşlem başarıyla gerçekleştirildi.'
+
+    //                })
+    //                $("#Aciklama ").append('<tr id="' + data.Result.PersonelID + '">' + Tarih + Note + Sil + '</tr>').fadeIn();
+
+    //            }
+    //            else {
+    //                Swal.fire({
+    //                    icon: 'error',
+    //                    title: 'Hata oluştu!',
+    //                    text: 'Alanlar boş olamaz!'
+
+    //                })
+    //            }
+
+    //        },
+    //        error: function (data) {
+    //            console.log(data);
+    //            Swal.fire({
+    //                icon: 'error',
+    //                title: 'Hata oluştu!',
+    //                text: 'Bir hata oluştu.'
+
+    //            })
+
+
+
+    //        }
+
+    //    });
+    //});
+</script>
+
+
+

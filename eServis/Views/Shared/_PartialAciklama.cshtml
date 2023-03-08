@@ -1,0 +1,140 @@
+﻿
+@using eServis.BusinessLayer
+@using eServis.Entities
+@model  eServis.Entities.Aciklama
+
+@{
+    int Id = Convert.ToInt32(Session["Id"]);
+
+
+    AciklamaYonetim ay = new AciklamaYonetim();
+    IQueryable<Aciklama> aciklama = ay.ListQueryable().Where(x => x.PersonelID == Id).OrderBy(x => x.Id);
+
+}
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<div class="card  card-link">
+    <div class="card-body">
+        @using (Html.BeginForm("AciklamaEkle", "Personel", FormMethod.Post, new { @id = "ListeForm2" }))
+        {@Html.AntiForgeryToken()
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div class="mb-3 row">
+
+            <div class="col-sm-10">
+
+                @*<input type="text" id="Note" name="Note" class="form-control"  placeholder="Açıklama"/>*@
+                @Html.EditorFor(x => x.Note, new { htmlAttributes = new { @id = "Note", name = "Note", @class = "form-control", @placeholder = "Açıklama" } })
+
+            </div>
+
+            <div class="col-sm-2">
+
+                <button id="btnKaydet" type="button" style="background-color:#242222 !important; color:#ffffff" class="btn btn-sm ">Kaydet</button>
+            </div>
+        </div>
+    }
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Tarih</th>
+                        <th>Açıklama</th>
+                        <th>Sil</th>
+                    </tr>
+                </thead>
+                <tbody id="Aciklama" style="height:auto;">
+                    @foreach (var item in aciklama)
+                    {
+                        <tr id="@item.NoteId">
+                            <td> @Convert.ToDateTime(item.Tarih).ToString("dd/MM/yyyy")</td>
+                            <td>@item.Note</td>
+                            <td>
+                                
+                                <button id="btnSil" data-sil-id="@item.NoteId" type="button"  style="background-color:#f12b0a !important; color:#ffffff" class="btn btn-sm ">Sil</button>
+
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer"></div>
+</div>
+
+
+
+<script>
+
+    $("#btnKaydet").on("click", async function () {
+        var formValues = $("#ListeForm2").serialize();
+
+        $.ajax({
+            url: '/Personel/AciklamaEkle/',
+            type: 'POST',
+            dataType: 'json',
+            data: formValues,
+            success: function (data) {
+                if (data != "1") {
+                    var tarih = new Date();
+                    var yil = tarih.getFullYear();
+                    var ay = tarih.getMonth();
+                    var gun = tarih.getDay();
+                    var Id = data.Result.PersonelID;
+                    var Tarih = "<td>" + gun + '.' + ay + '.' + yil  + "  </td>"
+                    var Note = "<td> " + data.Result.Note + "</td>";
+
+                    var Sil = "<td> <button id='btnSil' data-sil-id='" + data.Result.NoteId + "' type='button'  style='background-color:#f12b0a !important; color:#ffffff' class='sil btn btn-sm'>Sil</button></td>"
+
+                    $("#Aciklama ").prepend('<tr style="border:1px  dashed red" id="' + data.Result.NoteId + '">' + Tarih + Note + Sil + '</tr>').fadeIn();
+                    //Swal.fire({
+                    //    icon: 'success',
+                    //    title: 'Açıklama Eklendi!',
+                    //    text: 'İşlem başarıyla gerçekleştirildi.'
+
+                    //})
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata oluştu!',
+                        text: 'Alanlar boş olamaz!'
+
+                    })
+                }
+
+            },
+            error: function (data) {
+                console.log(data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata oluştu!',
+                    text: 'Sunucu kaynaklı hata oluştu.'
+
+                })
+
+
+
+            }
+
+        });
+    });
+    $(document).on("click","#btnSil",  function () {
+        var formValues = $("#Aciklama").serialize();
+        var btn = $(this);
+        var id = $(btn).data("sil-id");
+        $.ajax({
+            url: '/Personel/AciklamaSil/' + id,
+            type: 'POST',
+            dataType: 'json',
+            data: formValues,
+            success: function (data) {
+                if (data != null && data != '0') {
+                    $("#" + id).fadeOut(600);
+                }
+               
+             
+            }
+        });
+    });
+</script>

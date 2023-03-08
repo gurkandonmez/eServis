@@ -1,0 +1,78 @@
+﻿
+@model eServis.Entities.AracTanimlama
+
+@{
+    ViewBag.Title = "Sil";
+}
+
+@Html.AntiForgeryToken()
+@using (Html.BeginForm("Sil", "AracTanim", FormMethod.Post, new { @id = Model.ID }))
+ 
+{
+    <h2>Sil</h2>
+    <div>
+
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Adi)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Adi)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Tarih)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Tarih)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Km)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Km)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Tedarik)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Tedarik)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Ucret)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Ucret)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Aciklama)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Aciklama)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.AracTakipNo)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AracTakipNo)
+            </dd>
+
+        </dl>
+    </div>
+
+    <input id="btnSil" type="submit" value="Sil" class="btn btn-dark" />
+
+}
+

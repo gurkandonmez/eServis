@@ -1,0 +1,206 @@
+﻿@using eServis.BusinessLayer;
+@using eServis.Entities;
+@model eServis.Entities.AracTanimlama
+
+
+
+<div class="container mt-1">
+
+
+
+
+
+    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/umd/popper.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert2.css" rel="stylesheet" />
+    <script src="~/Content/sweetalert2.min.js"></script>
+
+
+    <div class="row-cols-1">
+
+        <div class="col-lg-12 col-sm-4 col-md-12" style="height:auto !important">
+            <div class="card  ">
+                <div class="card-header bg-primary">
+                    <h5 class="text-white font-weight-bold">
+                        @{
+
+                            if (@ViewBag.Baslik != null)
+                            {
+                                <span class="float-left">  @ViewBag.Baslik </span>
+                                <small class="float-right">@System.DateTime.Now.ToShortDateString()</small>
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                    </h5>
+                </div>
+
+                <div class="card-body bg-light">
+                    <div class="table-responsive">
+                        <table class="table table-striped ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Sıra</th>
+
+                                    <th>Adı</th>
+                                    @*<th>Düzenle</th>*@
+                                    <th>Tarih</th>
+                                    <th>Km</th>
+                                    <th>Tedarik</th>
+                                    <th>Ücret</th>
+                                    <th>Açıklama</th>
+                                    <th>Sil</th>
+                                    <th>Güncelle</th>
+
+                                </tr>
+                            </thead>
+                            @using (Html.BeginForm("Sirala", "AracTanim"))
+                            {
+                                <tbody class="table-hover">
+
+
+                                    <tr class="bg-transparent">
+
+
+
+                                        <td class="float-left">
+
+
+                                            <button type="submit" class="btn btn-sm  btn-primary">
+                                                <img src="~/Content/svg/sort-numeric-down.svg" width="25" height="25" />
+                                            </button>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a href="/AracTanim/ListA/@ViewBag.Id" type="submit" class="btn  btn-sm btn-danger">
+                                                <img src="~/Content/svg/sort-alpha-down.svg" width="25" height="25" />
+                                            </a>
+
+
+                                        </td>
+
+
+                                        <td>
+                                            <a id="btnAracBilgi" data-id="@ViewBag.Id" data-toggle="modal" data-target="#AracTanimEkle" class="btn btn-primary btn-sm">YENI KAYIT</a>
+
+                                        </td>
+
+                                        <td></td>
+                                    </tr>
+
+                                    @foreach (var item in ViewBag.AracListesi)
+                                    {
+
+                                        <tr id="update">
+
+                                            <td width="50px">
+
+                                                <input type="text" name="Sira" value="@item.Sira" id="@item.ID" class="form-control font-weight-bold sira" />
+                                                <input type="hidden" name="Id" value="@item.ID" class="form-control sira" />
+
+
+
+
+                                            <td>
+                                                <a style="height:30px" href="" data-toggle="modal" data-target="#ModalDuzenle" class="btn btn-dark btn-block btn-sm   font-weight-bold text-white">
+                                                    @item.Adi
+                                                </a>
+                                            </td>
+                                            <td width="110px"><a class="btn btn-sm btn-dark btn-block">@item.Tarih.ToString(string.Format("dd/MM/yyyy"))</a></td>
+
+                                            <td><a class="btn btn-dark btn-sm btn-block">@item.Km</a></td>
+
+                                            <td><a class="btn btn-dark btn-sm btn-block">@item.Tedarik</a></td>
+                                            <td><a class="btn btn-dark btn-sm btn-block">@item.Ucret</a></td>
+                                            <td><a href="#" data-toggle="tooltip" title="@item.Aciklama" class=" aciklama btn btn-dark btn-sm btn-block">@item.Aciklama</a></td>
+
+                                            @*<td> @Html.ActionLink("Düzenle", "Duzenle", new { id = item.Id }, new { @class = "btn btn-danger btn-sm btn-block" })</td>*@
+                                            <td>
+                                                <a data-toggle="modal" data-target="#AracTanimSil" data-sil-id="@item.ID" class="sil btn btn-danger btn-sm full text-center font-weigt-bold" style="height:30px">Sil</a>
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#AracTanimGuncelle" data-sil-id="@item.ID" class="guncelle btn btn-success btn-sm full text-center font-weigt-bold" style="height:30px">Güncelle</a>
+                                            </td>
+
+
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-primary text-white">
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+</div>
+@Bootstrap.ModalPopup(id: "AracTanimEkle", title: "Araç Bilgisi Ekle")
+@Bootstrap.ModalPopup(id: "AracTanimSil", title: "Araç Bilgisi Silinsin mi?")
+@Bootstrap.ModalPopup(id: "AracTanimGuncelle", title: "Araç Bilgisi Düzenle")
+<script src="~/Scripts/Aksesuar/AracTanim.js"></script>
+<script>
+    $(document).ready(function () {
+        $('a.aciklama').tooltip();
+    });
+</script>
+
+<script>
+
+$("#AracTanimEkle").on("show.bs.modal", function (e) {
+   
+
+    $("#AracTanimEkle_body").load("/AracTanim/Ekle/@ViewBag.Id");
+
+
+})
+    $("#AracTanimSil").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data('sil-id');
+
+        $("#AracTanimSil_body").load("/AracTanim/Sil/" + id);
+
+
+    })
+    $("#AracTanimGuncelle").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data('sil-id');
+
+    $("#AracTanimGuncelle_body").load("/AracTanim/Guncelle/" + id);
+
+
+})
+
+ $('#btnKaydet').click(function () {
+             $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                type: "POST",
+                dataType: 'json',
+                data: {'id':  @ViewBag.Id },
+                url: "/AracTanim/Ekle/" + @ViewBag.Id,
+                success: function (gelenDeg) {
+
+                 }
+
+
+            });
+
+ })
+
+</script>
+

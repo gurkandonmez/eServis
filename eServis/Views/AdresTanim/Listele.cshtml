@@ -1,0 +1,208 @@
+﻿@using eServis.BusinessLayer;
+@using eServis.Entities;
+@model eServis.Entities.AdresTanimlama
+
+
+
+<div class="container mt-1">
+
+
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+
+
+
+    <div class="row-cols-1">
+
+        <div class="col-lg-12 col-sm-4 col-md-12" style="height:auto !important">
+            <div class="card  ">
+                <div class="card-header bg-primary">
+                    <h5 class="text-white font-weight-bold">
+                        @{
+
+                            if (@ViewBag.Baslik != null)
+                            {
+                                <span class="float-left">  @ViewBag.Baslik </span>
+                                <small class="float-right">@System.DateTime.Now.ToShortDateString()</small>
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                    </h5>
+                </div>
+
+                <div class="card-body bg-light">
+                    <div class="table-responsive">
+                        <table class="table table-striped ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Sıra</th>
+
+                                    <th>Adı</th>
+                                    @*<th>Düzenle</th>*@
+                                    <th>Sil</th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            @using (Html.BeginForm("Sirala", "AdresTanim"))
+                            {
+                                <tbody class="table-hover">
+
+
+                                    <tr class="bg-transparent">
+
+                                    
+                                        @if (Enumerable.Count(ViewBag.adres) > 1)
+                                        { 
+                                            <td class="float-left">
+
+
+                                                <button type="submit" class="btn btn-sm  btn-primary">
+                                                    <img src="~/Content/svg/sort-numeric-down.svg" width="25" height="25" />
+                                                </button>
+
+                                            </td>
+
+                                            <td>
+
+                                                <a href="/AdresTanim/ListA/@ViewBag.Id" type="submit" class="btn  btn-sm btn-danger">
+                                                    <img src="~/Content/svg/sort-alpha-down.svg" width="25" height="25" />
+                                                </a>
+
+
+                                            </td>
+                                        }
+
+                                        <td>
+                                            <a href="#" data-toggle="modal" class="btn btn-primary btn-sm" data-target="#ModalEkle">YENI KAYIT</a>
+
+                                        </td>
+
+                                        <td></td>
+                                    </tr>
+
+                                    @foreach (var item in ViewBag.adres)
+                                    {
+
+                                        <tr id="update">
+
+                                            <td width="50px">
+
+                                                <input type="text" name="Sira" value="@item.Sira" id="@item.Id" class="form-control font-weight-bold sira" />
+                                                <input type="hidden" name="Id" value="@item.Id" class="form-control sira" />
+
+
+
+                                            <td>
+                                                <a style="height:30px" href="" data-duzenle-id="@item.Id" data-toggle="modal" data-target="#ModalDuzenle" class="btn btn-primary btn-block btn-sm   font-weight-bold text-white">
+                                                    @item.Baslik
+                                                </a>
+                                            </td>
+                                            @*<td> @Html.ActionLink("Düzenle", "Duzenle", new { id = item.Id }, new { @class = "btn btn-danger btn-sm btn-block" })</td>*@
+                                            <td>
+                                                <a id="BtnDelete" data-target="#ModalSil" data-delete-id="@item.Id" data-toggle="modal" class="btn btn-dark btn-sm full text-center font-weigt-bold" style="height:30px">SİL</a>
+                                            </td>
+
+
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-primary text-white">
+                 
+                    </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+@Bootstrap.ModalPopup(id: "ModalEkle", title: ViewBag.Baslik + " Ekranı")
+
+@Bootstrap.ModalPopup(id: "ModalSil", title: "Kayit Silinsin mi?")
+@Bootstrap.ModalPopup(id: "ModalDuzenle", title: "Düzenle")
+
+
+<script>
+    $(function ()
+    {
+    var ListeFormData = $("#ListeForm").serialize();
+
+    $("#ModalEkle").on("show.bs.modal", function (e) {
+
+        id = @ViewBag.Id;
+        $("#ModalEkle_body").load("/AdresTanim/Ekle/" + id);
+
+    })
+    $("#ModalDuzenle").on("show.bs.modal", function (e) {
+
+        var btn = $(e.relatedTarget);
+        var id = btn.data("duzenle-id")
+        $("#ModalDuzenle_body").load("/AdresTanim/Duzenle/" + id);
+
+    })
+    $("#ModalSil").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = btn.data("delete-id")
+
+        $("#ModalSil_body").load("/AdresTanim/Delete/" + id);
+
+    })
+
+
+})
+
+$(function () {
+
+    $("#btnSirala").click(function () {
+        var id = @ViewBag.Id
+        $.ajax({
+            type: "POST",
+            url: "/AdresTanim/Sirala/" + id,
+            data: ListeFormData,
+            success: function () {
+                //  window.location.reload();
+
+            }
+        })
+    })
+
+    $("#btnSave").click(function () {
+        var ListeFormData = $("#ListeForm").serialize();
+        $.ajax({
+            type: "POST",
+            url: "/AdresTanim/Ekle/" + id,
+            data: ListeFormData,
+            success: function () {
+                window.location.reload();
+
+            }
+        })
+
+    })
+
+
+
+})
+</script>

@@ -1,0 +1,118 @@
+﻿
+
+@model List<eServis.Entities.Fis>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+
+<div class="container mt-1">
+    <div class="row">
+        <div class="col-12">
+            <a data-toggle="modal" data-target="#ModalFis" class="btn btn-success"> Yeni Kayıt</a>
+        </div>
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-4 col-sm-4 mt-2 mb-2">
+
+                <div class="card text-white bg-dark " style=" ">
+                   
+                    <div class="card-header" style="background-color:#000000!important">
+                        <button data-toggle="modal" data-sil-id="@item.Id" data-target="#ModalFisSil" class="btn btn-sm  btn-danger">
+                            <img src="~/Content/svg/trash.svg" />
+                        </button>
+                        <button data-toggle="modal" data-duzenle-id="@item.Id" data-target="#ModalFisDuzenle" class="btn btn-sm  btn-light ">
+                            <img src="~/Content/svg/pencil.svg" />
+
+                        </button>
+
+                    </div>
+
+                    <div class="detay text-white">
+                        <a href="/FisTanim/Index/@item.Id" class="text-white">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item  bg-dark">@item.Adi</li>
+       
+                            </ul>
+                        </a>
+                    </div>
+
+                    <div class="card-footer bg-dark">
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        }
+    </div>
+</div>
+
+@Bootstrap.ModalPopup(id: "ModalFis", title: "Fiş Ekle", showCloseButton: true)
+
+@Bootstrap.ModalPopup(id: "ModalFisDuzenle", title: "Fiş Düzenle", showCloseButton: true)
+
+@Bootstrap.ModalPopup(id: "ModalFisSil", title: "Fiş Bilgisi Silinsin mi?", showCloseButton: true)
+<script>
+
+    $("#ModalFis").on("show.bs.modal", function (e) {
+
+
+        $("#ModalFis_body").load("/Fis/Ekle/" );
+
+
+    })
+    $("#ModalFisSil").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $("#ModalFisSil_body").load("/Fis/Sil/" + id);
+
+
+    })
+    $("#ModalFisDuzenle").on("show.bs.modal", function (e) {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("duzenle-id");
+        $("#ModalFisDuzenle_body").load("/Fis/Duzenle/" + id);
+
+
+    })
+    $('#btnDelete').click(function () {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("sil-id");
+        $.ajax({
+
+            type: "POST",
+            url: "/Fis/Sil/" + id,
+            data: { 'Id': id },
+            success: function () {
+                //  window.location.reload();
+
+            }
+
+        });
+    })
+    $('#btnUpdate').click(function () {
+        var btn = $(e.relatedTarget);
+        var id = $(btn).data("duzenle-id");
+        var ListeFormData = $("#ListeForm").serialize();
+        $.ajax({
+
+            type: "POST",
+            url: "/Fis/Duzenle/" + id,
+            data: ListeFormData,
+            success: function () {
+                //  window.location.reload();
+
+            }
+
+        });
+    })
+
+</script>

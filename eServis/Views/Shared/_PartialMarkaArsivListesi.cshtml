@@ -1,0 +1,94 @@
+﻿
+@model List<eServis.Entities.Marka>
+<div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Açıklama</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="arsiv" style="height:auto;">
+                @using (Html.BeginForm("ArsivListesi", "Marka", FormMethod.Post, new { @id = "ListeForm" }))
+                {
+
+                    foreach (var item in Model)
+                    {
+                        <tr id="@item.Id">
+                            <td>@item.Baslik</td>
+
+                            <td>
+
+                                <button id="btnArsivCikar" data-sil-id="@item.Id" type="button" style="background-color:#f12b0a !important; color:#ffffff" class="btn btn-sm ">Arşivden Çıkar</button>
+
+                            </td>
+                            <td>
+
+                                <button id="btnSil" data-sil-id="@item.Id" type="button" style="background-color:#000 !important; color:#ffffff" class="btn btn-sm ">Sil</button>
+
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    $(document).on("click", "#btnArsivCikar", function () {
+        var formValues = $("#ListeForm").serialize();
+
+        var btn = $(this);
+        var id = $(btn).data("sil-id");
+        $.ajax({
+            url: '/Marka/ArsivListesi/' + id,
+            type: 'POST',
+            dataType: 'json',
+            data: formValues,
+            success: function (data) {
+                if (data != null && data != '0') {
+                    $("#" + id).fadeOut(600);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tebrikler',
+                        text: 'İşlem başarıyla gerçekleştirildi.'
+
+                    })
+                    window.location = "/Marka/Index", 7000;
+                }
+            }
+        })
+
+    })
+    $(document).on("click", "#btnSil", function () {
+        var formValues = $("#ListeForm").serialize();
+
+        var btn = $(this);
+        var id = $(btn).data("sil-id");
+        $.ajax({
+            url: '/Marka/ArsivSil/' + id,
+            type: 'POST',
+            dataType: 'json',
+            data: formValues,
+            success: function (data) {
+                if (data != null && data != '0') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tebrikler!',
+                        text: 'İşlem başarıyla gerçekleştirildi.'
+
+                    })
+                    window.location = "/Marka/Index", 7000;
+                }
+            }
+        })
+    })
+</script>
+
+

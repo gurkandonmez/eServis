@@ -1,0 +1,43 @@
+﻿@model List<eServis.Entities.Personel>
+<div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ad</th>
+                    <th>Soyad</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="arsiv" style="height:auto;">
+                @using (Html.BeginForm("Arsiv", "Personel", FormMethod.Post, new { @id = "ListeForm" }))
+                {
+
+                    foreach (var item in Model)
+                    {
+                        <tr id="@item.KimlikNo">
+                            <td>@item.Ad</td>
+                            <td>@item.Soyad</td>
+                            <td>
+
+                                <button id="btnArsivCikar" data-sil-id="@item.KimlikNo" type="button" style="background-color:#f12b0a !important; color:#ffffff" class="btn btn-sm ">Arşivden Çıkar</button>
+
+                            </td>
+                            <td>
+
+                                <button id="btnSil" data-sil-id="@item.ID" type="button" style="background-color:#000 !important; color:#ffffff" class="btn btn-sm ">Sil</button>
+
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="~/Scripts/Personel/personel.js"></script>
+

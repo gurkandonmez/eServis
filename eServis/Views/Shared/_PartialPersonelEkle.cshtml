@@ -1,0 +1,141 @@
+﻿
+
+@model  eServis.Entities.Personel
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+<script src="~/Scripts/locales/bootstrap-datepicker.tr.min.js"></script>
+<link href="~/Content/bootstrap-datepicker.min.css" rel="stylesheet" />
+
+
+<script>
+    $(document).mouseup(function (e) {
+
+        $('#DogumTarihi').Close();
+        $('#IseBaslamaTarihi').Close();
+
+    });
+        
+    $(document).ready(function () {
+        $("#DogumTarihi").datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'tr',
+        });
+
+        $("#IseBaslamaTarihi").datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'tr',
+        });
+    });
+
+</script>
+<script>
+    $("#btnSave").on("click",  function () {
+        var formValues = $("#ListeForm").serialize();
+
+        $.ajax({
+
+            url: '/Personel/Ekle/',
+            type: 'POST',
+            dataType: 'json',
+            data: formValues,
+            success: function (data) {
+                if (data == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata oluştu!',
+                        text: 'Alanlar boş olamaz!'
+
+                    })
+                }
+                else if (data == 1) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Tebrikler!',
+                            text: 'PERSONEL BAŞARIYLA EKLENDİ!'
+
+                        })
+                        window.location = "/Personel/Index/",3000;
+               
+                }
+            }
+        })
+    });
+</script>
+
+
+
+@using (Html.BeginForm("Ekle", "Personel", FormMethod.Post, new { @id = "ListeForm" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    <div class="row g-3  mb-4">
+        <div class="col">
+            @Html.EditorFor(model => model.AdSoyad, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ad" } })
+        </div>
+      
+    </div>
+
+    <div class="row g-3  mb-4">
+        <div class="col">
+            @Html.EditorFor(model => model.KimlikNo, new { htmlAttributes = new { @type = "text", @class = "form-control", @placeholder = "Kimlik No" } })
+        </div>
+        <div class="col">
+            @Html.EditorFor(model => model.SigortaNo, new { htmlAttributes = new { @type = "text", @class = "form-control", @placeholder = "Sigorta No" } })
+        </div>
+    </div>
+    <div class="row g-3  mb-4">
+        <div class="col">
+            @Html.EditorFor(model => model.DogumTarihi, new { htmlAttributes = new { @id = "DogumTarihi", @class = "form-control", @placeholder = "Doğum Tarihi" } })
+
+        </div>
+        <div class="col">
+            @Html.EditorFor(model => model.IseBaslamaTarihi, new { htmlAttributes = new { @id = "IseBaslamaTarihi", @class = "form-control", @placeholder = "İşe Başlama Tarihi" } })
+        </div>
+    </div>
+    <div class="row g-3  mb-4">
+        <div class="col">
+            @Html.DropDownList("MedeniHali", new List<SelectListItem>
+
+                 {
+                    new SelectListItem { Text = "Medeni Hal", Value = "0" },
+                    new SelectListItem { Text = "Bekar", Value = "Bekar" },
+                    new SelectListItem { Text = "Evli", Value = "Evli" }
+
+            },
+            new{ @class="form-control"})
+        </div>
+        <div class="col">
+            @Html.EditorFor(model => model.CocukSayisi, new { htmlAttributes = new { @class = "form-control", @placeholder = "Çocuk Sayısı" } })
+        </div>
+    </div>
+    <div class="row g-3  mb-4">
+        <div class="col">
+            @Html.EditorFor(model => model.Maas, new { htmlAttributes = new { @class = "form-control", @placeholder = "Maaş" } })
+
+        </div>
+        <div class="col">
+            @Html.DropDownList("EgitimDurumu", new List<SelectListItem>
+
+               {
+                    new SelectListItem { Text = "Eğitim Durumu", Value = "0" },
+                  new SelectListItem { Text = "Lise", Value = "Lise" },
+                  new SelectListItem { Text = "Ön Lisans", Value = "Ön Lisans" },
+                  new SelectListItem { Text = "Lisans", Value = "Lisans" }
+
+            },
+            new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group mb-4">
+        <div class="col-md-offset-2 col-md-10">
+            <button id="btnSave" type="button" class="btn btn-primary">Kaydet</button>
+        </div>
+    </div>
+
+
+
+
+}
+
